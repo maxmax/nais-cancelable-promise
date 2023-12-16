@@ -1,0 +1,22 @@
+{
+  "name": "@nais/cancelable-promise-test",
+  "version": "1.0.0",
+  "description": "CancelablePromise Test",
+  "main": "cancelable-promise.test.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest"
+  },
+  "engines": {
+    "node": "<=14.17.0"
+  },
+  "author": "Alexander Lyakshev",
+  "license": "ISC",
+  "devDependencies": {
+    "@jest/globals": "^26.6.2",
+    "jest": "^26.6.3"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
