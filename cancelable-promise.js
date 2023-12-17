@@ -6,7 +6,7 @@
 // like the standard Promise class, but with additional methods cancel and isCanceled,
 // which allow you to cancel a promise chain and check if it has been canceled.
 
-// The code defines a class named CancelablePromise.
+
 class CancelablePromise {
   // The class constructor takes an executor function as an argument.
   // It checks if the executor is a function, throwing an error if not.
@@ -57,17 +57,18 @@ class CancelablePromise {
     this._promise = new Promise(wrappedExecutor);
   }
 
-  // The then method is implemented to handle promise chaining.
-  // It returns a new CancelablePromise with its own cancelation logic and checks.
   then(onFulfilled, onRejected) {
-    if (typeof onFulfilled !== 'function' && typeof onRejected !== 'function') {
-      throw new TypeError('onFulfilled and onRejected must be functions');
+    // If both handlers are missing, simply return the current instance
+    if (!onFulfilled && !onRejected) {
+      return this;
     }
 
+    // Instead of creating a new CancelablePromise instance,
+    // create a new promise inside the current instance
     const newPromise = new CancelablePromise((resolve, reject, onCancel) => {
       onCancel(() => {
         this.cancel();
-        newPromise.cancel();
+        reject({ isCanceled: true });
       });
 
       this._promise.then(
