@@ -81,12 +81,6 @@ class CancelablePromise {
     const isValidFunction = (fn) => typeof fn === 'function';
 
     // Валідація переданих обробників.
-    //const validateCallbacks = (fulfilled, rejected) => {
-    //  if (!isValidFunction(fulfilled) && !isValidFunction(rejected)) {
-    //    throw new TypeError('onFulfilled and onRejected must be functions');
-    //  }
-    //};
-    // Валідація переданих обробників.
     const validateCallbacks = (fulfilled, rejected) => {
       if (fulfilled !== undefined && !isValidFunction(fulfilled)) {
         throw new TypeError('onFulfilled must be a function');
@@ -95,11 +89,6 @@ class CancelablePromise {
         throw new TypeError('onRejected must be a function');
       }
     };
-    // const validateCallbacks = (fulfilled, rejected) => {
-    //  if ((!fulfilled || !isValidFunction(fulfilled)) && (!rejected || !isValidFunction(rejected))) {
-    //    throw new TypeError('onFulfilled and onRejected must be functions');
-    //  }
-    // };
 
     // Функція, яка викликається при скасуванні обіцянки.
     const onCancelCallback = () => {

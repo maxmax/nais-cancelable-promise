@@ -12,11 +12,14 @@
 // and cancel the request before it completes.
 
 const express = require('express');
-const CancelablePromise = require('./cancelable-promise'); // Adjust the path based on your project structure
+
+const CancelablePromise = require('./cancelable-promise'); // Promise (ES6)
+const CancelableAsync = require('./сancelable-async'); // async / await (ES7)
 
 const app = express();
 const port = 3000;
 
+// CancelablePromise
 function simulateAsyncOperation(data) {
   return new CancelablePromise((resolve, reject, onCancel) => {
     const timeoutId = setTimeout(() => {
@@ -42,6 +45,35 @@ app.get('/', async (req, res) => {
       res.status(500).send('Request canceled');
     } else {
       res.status(500).send('Internal Server Error');
+    }
+  }
+});
+
+// CancelableAsync
+// Приклад маршруту Express, що використовує CancelableAsync
+app.get('/api/async-operation', async (req, res) => {
+  // Створюємо екземпляр CancelableAsync з асинхронною операцією
+  const asyncOperation = new CancelableAsync(async () => {
+    // Ваша асинхронна операція тут, наприклад, затримка на 3 секунди
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    return 'Слава Україні, Смерть ворогам!';
+  });
+
+  try {
+    // Чекаємо на виконання асинхронної операції
+    const result = await asyncOperation;
+
+    // Відправляємо успішну відповідь
+    res.status(200).json({ result });
+  } catch (error) {
+    // Перевіряємо, чи було скасовано операцію
+    if (error.isCanceled) {
+      console.log('Async operation canceled');
+      res.status(400).json({ error: 'Operation canceled' });
+    } else {
+      // Обробляємо інші помилки
+      console.error('Error during async operation:', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
   }
 });
