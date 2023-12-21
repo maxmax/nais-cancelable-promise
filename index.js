@@ -35,8 +35,18 @@ function simulateAsyncOperation(data) {
 
 app.get('/', async (req, res) => {
   try {
-    const result = await simulateAsyncOperation('Hello, nais!');
-    res.send(result);
+    const promises = [
+      simulateAsyncOperation('Hello, nais!'),
+      simulateAsyncOperation('How are you?'),
+      simulateAsyncOperation('Hope you are doing well!'),
+      simulateAsyncOperation('Слава нації — смерть ворогам!')
+    ];
+
+    // Use Promise.all to execute all the promises concurrently
+    const results = await Promise.all(promises);
+
+    // Send the results back to the client
+    res.send(results);
   } catch (error) {
     if (error.isCanceled) {
       res.status(500).send('Request canceled');
