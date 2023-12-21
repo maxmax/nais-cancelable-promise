@@ -19,3 +19,5 @@ https://gitlab.com/nais.ua/cancelable-promise-test
 4. Масив `results` надсилається назад клієнту.
 
 *Цей код дозволяє одночасно виконувати декілька асинхронних запитів і надсилати назад клієнту їхні результати однією відповіддю.*
+
+![Result](https://github.com/maxmax/nais-cancelable-promise/raw/main/result.jpg)
