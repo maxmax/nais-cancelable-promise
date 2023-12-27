@@ -9,15 +9,19 @@ Develop a class CancelablePromise that behaves similarly to the native Promise c
 https://gitlab.com/nais.ua/cancelable-promise-test
 
 
-### Доповнив приклад коду, з множинним викликом асинхронних запитів в index.js
+### Enhanced the code example with multiple asynchronous requests in index.js
 
-**У наведеному прикладі:**
+**In the provided example:**
 
-1. Створено масив `promises`, що містить декілька асинхронних операцій.
-2. Використовується функція `Promise.all` для паралельного виконання всіх обіцянок у масиві.
-3. Результати виконання всіх операцій збираються в масив `results`.
-4. Масив `results` надсилається назад клієнту.
+1. An array promises is created, containing several asynchronous operations.
+1. The Promise.all function is utilized for the parallel execution of all promises in the array.
+1. The results of all operations are collected in the results array.
+1. The results array is sent back to the client.
 
-*Цей код дозволяє одночасно виконувати декілька асинхронних запитів і надсилати назад клієнту їхні результати однією відповіддю.*
+*This code enables the simultaneous execution of multiple asynchronous requests and sends their results back to the client in a single response.*
 
 ![Result](https://github.com/maxmax/nais-cancelable-promise/raw/main/result.jpg)
+
+- GET /trigger-operations
+- POST /cancel-operations
+- GET /base
