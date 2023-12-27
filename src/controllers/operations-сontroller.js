@@ -18,14 +18,14 @@ const fetchData = () => {
   return simulateAsyncOperation({ data: "Hello, this is fetched data!" });
 };
 
-const processUserData = (userData) => {
+const processUserData = userData => {
   return simulateAsyncOperation({
     processedData: `${userData.data} Processing complete!`,
   });
 };
 
-const displayResult = (result) => {
-  return simulateAsyncOperation({ displayResult: "Display complete!" });
+const displayResult = result => {
+  return simulateAsyncOperation({ displayResult: result });
 };
 
 const triggerOperations = async (req, res) => {
@@ -56,5 +56,5 @@ const cancelOperations = (req, res) => {
 module.exports = {
   simulateAsyncOperation,
   triggerOperations,
-  cancelOperations
+  cancelOperations,
 };

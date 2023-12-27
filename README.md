@@ -8,7 +8,6 @@ Develop a class CancelablePromise that behaves similarly to the native Promise c
 
 https://gitlab.com/nais.ua/cancelable-promise-test
 
-
 ### Enhanced the code example with multiple asynchronous requests in index.js
 
 **In the provided example:**
@@ -18,7 +17,7 @@ https://gitlab.com/nais.ua/cancelable-promise-test
 1. The results of all operations are collected in the results array.
 1. The results array is sent back to the client.
 
-*This code enables the simultaneous execution of multiple asynchronous requests and sends their results back to the client in a single response.*
+_This code enables the simultaneous execution of multiple asynchronous requests and sends their results back to the client in a single response._
 
 ![Result](https://github.com/maxmax/nais-cancelable-promise/raw/main/result.jpg)
 

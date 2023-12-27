@@ -40,7 +40,7 @@ class CancelablePromise {
     };
 
     // Function to add a cancellation handler.
-    const onCancel = (handler) => {
+    const onCancel = handler => {
       this._onCancelHandlers.push(handler);
     };
 
@@ -51,14 +51,14 @@ class CancelablePromise {
     const wrappedExecutor = (resolve, reject) => {
       onCancel(onCancelCallback);
       executor(
-        (value) => {
+        value => {
           if (this._isCanceled) {
             reject({ isCanceled: true });
           } else {
             resolve(value);
           }
         },
-        (reason) => {
+        reason => {
           if (this._isCanceled) {
             reject({ isCanceled: true });
           } else {
@@ -77,7 +77,7 @@ class CancelablePromise {
   }
 
   then(onFulfilled, onRejected) {
-    const isValidFunction = (fn) => typeof fn === "function";
+    const isValidFunction = fn => typeof fn === "function";
 
     const validateCallbacks = (fulfilled, rejected) => {
       if (fulfilled !== undefined && !isValidFunction(fulfilled)) {
@@ -93,7 +93,7 @@ class CancelablePromise {
       newPromise.cancel();
     };
 
-    const onCancel = (handler) => {
+    const onCancel = handler => {
       this._onCancelHandlers.push(handler);
     };
 
@@ -105,13 +105,13 @@ class CancelablePromise {
       validateCallbacks(onFulfilled, onRejected);
 
       this._promise.then(
-        (value) => {
+        value => {
           if (this._isCanceled) {
             reject({ isCanceled: true });
             return;
           }
 
-          const handleResult = (resultFn) => {
+          const handleResult = resultFn => {
             try {
               resolve(isValidFunction(resultFn) ? resultFn(value) : value);
             } catch (error) {
@@ -125,13 +125,13 @@ class CancelablePromise {
             handleResult(undefined);
           }
         },
-        (reason) => {
+        reason => {
           if (this._isCanceled) {
             reject({ isCanceled: true });
             return;
           }
 
-          const handleResult = (resultFn) => {
+          const handleResult = resultFn => {
             try {
               resolve(isValidFunction(resultFn) ? resultFn(reason) : reason);
             } catch (error) {
@@ -157,11 +157,11 @@ class CancelablePromise {
 
   finally(onFinally) {
     return this.then(
-      (value) => {
+      value => {
         onFinally();
         return value;
       },
-      (reason) => {
+      reason => {
         onFinally();
         throw reason;
       },
@@ -176,7 +176,7 @@ class CancelablePromise {
       const onCancelHandlers = [...this._onCancelHandlers];
 
       // Asynchronously call cancellation event handlers.
-      return Promise.all(onCancelHandlers.map((handler) => handler())).then(
+      return Promise.all(onCancelHandlers.map(handler => handler())).then(
         () => {},
       );
     }

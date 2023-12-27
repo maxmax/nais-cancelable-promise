@@ -30,7 +30,7 @@ describe("CancelablePromise test", () => {
   // Third test checks promise resolution with the passing of a unique symbol.
   test("resolving", async () => {
     const unique = Symbol();
-    const promise = new CancelablePromise((resolve) =>
+    const promise = new CancelablePromise(resolve =>
       setTimeout(() => resolve(unique)),
     );
     await expect(promise).resolves.toBe(unique);
@@ -57,18 +57,18 @@ describe("CancelablePromise test", () => {
     test("then(onFulfilled)", async () => {
       const initValue = 10;
       const multiplier = 2;
-      const onFulfilled = (value) => value * multiplier;
+      const onFulfilled = value => value * multiplier;
 
-      const cp = new CancelablePromise((resolve) => resolve(initValue));
-      const cp2 = cp.then((v) => {
-        return new Promise((resolve) =>
+      const cp = new CancelablePromise(resolve => resolve(initValue));
+      const cp2 = cp.then(v => {
+        return new Promise(resolve =>
           setTimeout(() => resolve(onFulfilled(v))),
         );
       });
 
       expect(cp).not.toBe(cp2);
       expect(cp2).toBeInstanceOf(CancelablePromise);
-      await getPromiseState(cp2, (state) => expect(state).toBe("pending"));
+      await getPromiseState(cp2, state => expect(state).toBe("pending"));
       await expect(cp).resolves.toBe(initValue);
       await expect(cp2).resolves.toBe(onFulfilled(initValue));
     });
@@ -77,10 +77,10 @@ describe("CancelablePromise test", () => {
     test("then(onFulfilled, onRejected)", async () => {
       const initValue = 10;
       const multiplier = 2;
-      const func = (value) => value * multiplier;
+      const func = value => value * multiplier;
 
       const cp = new CancelablePromise((resolve, reject) => reject(initValue));
-      const cp2 = cp.then((value) => value, func);
+      const cp2 = cp.then(value => value, func);
 
       expect(cp).not.toBe(cp2);
       expect(cp2).toBeInstanceOf(CancelablePromise);
@@ -92,7 +92,7 @@ describe("CancelablePromise test", () => {
     // Eighth test checks the correctness of calling the then() method without passing arguments.
     test("then() - empty arguments", async () => {
       const initValue = 10;
-      const cp = new CancelablePromise((resolve) => resolve(initValue)).then();
+      const cp = new CancelablePromise(resolve => resolve(initValue)).then();
       expect(cp).toBeInstanceOf(CancelablePromise);
       await expect(cp).resolves.toBe(initValue);
     });
@@ -100,9 +100,9 @@ describe("CancelablePromise test", () => {
     // Ninth test checks the correctness of calling a sequence of then() methods.
     test(".then().then() ... .then()", async () => {
       const depth = 10;
-      let promise = new CancelablePromise((resolve) => resolve(0));
+      let promise = new CancelablePromise(resolve => resolve(0));
       for (let idx = 0; idx < depth; ++idx) {
-        promise = promise.then((val) => val + 1);
+        promise = promise.then(val => val + 1);
       }
 
       expect(promise).toBeInstanceOf(CancelablePromise);
@@ -115,12 +115,12 @@ describe("CancelablePromise test", () => {
     test("should cancel promise", async () => {
       let value = 0;
       let canceled = false;
-      const p1 = new CancelablePromise((resolve) =>
+      const p1 = new CancelablePromise(resolve =>
         setTimeout(() => resolve(1), 100),
       );
-      const p2 = p1.then((v) => (value = v)).finally(() => (canceled = true));
+      const p2 = p1.then(v => (value = v)).finally(() => (canceled = true));
       const p3 = p1.then(() => void 0);
-      await getPromiseState(p3, (state) => expect(state).toBe("pending"));
+      await getPromiseState(p3, state => expect(state).toBe("pending"));
       expect(typeof p2.cancel).toBe("function");
       setTimeout(async () => {
         p2.cancel();
@@ -137,7 +137,7 @@ describe("CancelablePromise test", () => {
   describe("#isCanceled", () => {
     // Eleventh test checks whether the state changes after canceling the promise.
     test("should change state on cancel()", () => {
-      const p1 = new CancelablePromise((resolve) => resolve(1));
+      const p1 = new CancelablePromise(resolve => resolve(1));
       const p2 = p1.then(() => 2);
       const p3 = p1.then(() => 3);
 
@@ -161,9 +161,9 @@ describe("CancelablePromise test", () => {
 function getPromiseState(promise, callback) {
   const unique = Symbol("unique");
   return Promise.race([promise, Promise.resolve(unique)])
-    .then((value) => (value === unique ? "pending" : "fulfilled"))
+    .then(value => (value === unique ? "pending" : "fulfilled"))
     .catch(() => "rejected")
-    .then((state) => {
+    .then(state => {
       callback && callback(state);
       return state;
     });

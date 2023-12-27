@@ -34,11 +34,15 @@ app.get("/base", async (req, res) => {
       simulateAsyncOperation("Слава нації — смерть ворогам!"),
     ];
 
-    const results = await Promise.all(promises.map(promise => promise.catch(error => ({ error }))));
+    const results = await Promise.all(
+      promises.map(promise => promise.catch(error => ({ error }))),
+    );
 
     res.send(results);
   } catch (error) {
-    const errorMessage = error.isCanceled ? "Request canceled" : "Internal Server Error";
+    const errorMessage = error.isCanceled
+      ? "Request canceled"
+      : "Internal Server Error";
     res.status(500).send(errorMessage);
   }
 });
