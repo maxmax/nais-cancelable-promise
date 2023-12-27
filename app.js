@@ -5,36 +5,40 @@
 // simulated asynchronous operation. The onCancel handler is used to clean up resources or perform specific
 // actions when the promise is canceled.
 
-const express = require('express');
-const { triggerOperations, cancelOperations, simulateAsyncOperation } = require('./src/controllers/operations-сontroller');
+const express = require("express");
+const {
+  triggerOperations,
+  cancelOperations,
+  simulateAsyncOperation,
+} = require("./src/controllers/operations-сontroller");
 
 const app = express();
 const port = 3000;
 
 // Endpoint to trigger asynchronous operations
-app.get('/trigger-operations', triggerOperations);
+app.get("/trigger-operations", triggerOperations);
 
 // Endpoint to cancel ongoing operations
-app.post('/cancel-operations', cancelOperations);
+app.post("/cancel-operations", cancelOperations);
 
 // Endpoint to trigger simulateAsyncOperation
-app.get('/base', async (req, res) => {
+app.get("/base", async (req, res) => {
   try {
     const promises = [
-      simulateAsyncOperation('Hello, nais!'),
-      simulateAsyncOperation('How are you?'),
-      simulateAsyncOperation('Hope you are doing well!'),
+      simulateAsyncOperation("Hello, nais!"),
+      simulateAsyncOperation("How are you?"),
+      simulateAsyncOperation("Hope you are doing well!"),
       simulateAsyncOperation(0),
       simulateAsyncOperation(),
       simulateAsyncOperation(false),
-      simulateAsyncOperation('Слава нації — смерть ворогам!')
+      simulateAsyncOperation("Слава нації — смерть ворогам!"),
     ];
 
-    const results = await Promise.all(promises);
+    const results = await Promise.all(promises.map(promise => promise.catch(error => ({ error }))));
 
     res.send(results);
   } catch (error) {
-    const errorMessage = error.isCanceled ? 'Request canceled' : 'Internal Server Error';
+    const errorMessage = error.isCanceled ? "Request canceled" : "Internal Server Error";
     res.status(500).send(errorMessage);
   }
 });

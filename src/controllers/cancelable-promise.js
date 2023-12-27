@@ -1,11 +1,11 @@
 class CancelablePromise {
   constructor(executor) {
-    if (typeof executor !== 'function') {
-      throw new Error('Executor must be a function');
+    if (typeof executor !== "function") {
+      throw new Error("Executor must be a function");
     }
 
     // Internal promise state
-    this._state = 'pending';
+    this._state = "pending";
 
     // Property indicating whether the promise execution has been canceled.
     this._isCanceled = false;
@@ -16,16 +16,16 @@ class CancelablePromise {
     // Create a Proxy to track changes in the promise state.
     this._promise = new Proxy(new Promise(() => {}), {
       set: (target, prop, value) => {
-        if (prop === 'status') {
+        if (prop === "status") {
           this._state = value;
-          if (value === 'rejected' && this._isCanceled) {
+          if (value === "rejected" && this._isCanceled) {
             // If the state becomes "rejected" and the promise is canceled, change the state to "canceled."
-            this._state = 'canceled';
+            this._state = "canceled";
           }
         }
         target[prop] = value;
         return true;
-      }
+      },
     });
 
     // Internal flag to check if cancellation has been triggered.
@@ -33,7 +33,7 @@ class CancelablePromise {
 
     // Function to be called on cancellation.
     const onCancelCallback = () => {
-      if (this._state !== 'rejected' || !this._cancelTriggered) {
+      if (this._state !== "rejected" || !this._cancelTriggered) {
         this.cancel();
         cancelablePromise.cancel();
       }
@@ -65,7 +65,7 @@ class CancelablePromise {
             reject(reason);
           }
         },
-        onCancel
+        onCancel,
       );
     };
 
@@ -77,14 +77,14 @@ class CancelablePromise {
   }
 
   then(onFulfilled, onRejected) {
-    const isValidFunction = (fn) => typeof fn === 'function';
+    const isValidFunction = (fn) => typeof fn === "function";
 
     const validateCallbacks = (fulfilled, rejected) => {
       if (fulfilled !== undefined && !isValidFunction(fulfilled)) {
-        throw new TypeError('onFulfilled must be a function');
+        throw new TypeError("onFulfilled must be a function");
       }
       if (rejected !== undefined && !isValidFunction(rejected)) {
-        throw new TypeError('onRejected must be a function');
+        throw new TypeError("onRejected must be a function");
       }
     };
 
@@ -144,7 +144,7 @@ class CancelablePromise {
           } else {
             handleResult(undefined);
           }
-        }
+        },
       );
     });
 
@@ -164,7 +164,7 @@ class CancelablePromise {
       (reason) => {
         onFinally();
         throw reason;
-      }
+      },
     );
   }
 
@@ -176,7 +176,9 @@ class CancelablePromise {
       const onCancelHandlers = [...this._onCancelHandlers];
 
       // Asynchronously call cancellation event handlers.
-      return Promise.all(onCancelHandlers.map((handler) => handler())).then(() => {});
+      return Promise.all(onCancelHandlers.map((handler) => handler())).then(
+        () => {},
+      );
     }
 
     return Promise.resolve();
